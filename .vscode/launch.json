@@ -35,7 +35,10 @@
       "args": ["${relativeFile}", "--runInBand"],
       "console": "integratedTerminal",
       // the visibility of the Debug Console panel during a debugging session.
-      "internalConsoleOptions": "neverOpen"
+      "internalConsoleOptions": "neverOpen",
+      "env": {
+        "NODE_OPTIONS": "--experimental-vm-modules"
+      },
     }
   ]
 }
