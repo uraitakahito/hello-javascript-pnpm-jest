@@ -1,6 +1,13 @@
 {
   "version": "0.2.0",
   "configurations": [
+    //
+    // NOTE:
+    //
+    // The difference between args and runtimeArgs in VSCode's launch.json
+    // https://stackoverflow.com/questions/42207740/what-is-the-difference-between-args-and-runtimeargs-in-vscodes-launch-json
+    //
+
     {
       "name": "run selected file",
       "type": "node",
@@ -13,40 +20,22 @@
       "stopOnEntry": true
     },
     {
-      "name": "Debug current Jest Test",
+      "name": "Debug current file with Jest(pnpm)",
       "type": "node",
       "request": "launch",
-      "runtimeArgs": [
-        "--inspect-brk",
-        "--experimental-vm-modules",
-        "${workspaceRoot}/node_modules/.bin/jest",
-        "--runInBand",
-        "${relativeFile}"
-      ],
+
+      //
+      // Binstubs (files in node_modules/.bin) are always shell files, not symlinks to JS files.
+      // If you expect the file to be a JS file, reference the original file directly instead, as described:
+      // https://github.com/pnpm/pnpm/issues/736
+      //
+      "runtimeExecutable": "sh",
+
+      "program": "${workspaceRoot}/node_modules/.bin/jest",
+      "args": ["${relativeFile}", "--runInBand"],
       "console": "integratedTerminal",
       // the visibility of the Debug Console panel during a debugging session.
       "internalConsoleOptions": "neverOpen"
-    },
-    {
-      "name": "Debug ALL Jest Tests",
-      "type": "node",
-      "request": "launch",
-      "runtimeArgs": [
-        "--inspect-brk",
-        "--experimental-vm-modules",
-        "${workspaceRoot}/node_modules/.bin/jest",
-        "--runInBand"
-      ],
-      "console": "integratedTerminal",
-      // the visibility of the Debug Console panel during a debugging session.
-      "internalConsoleOptions": "neverOpen"
-    },
-    {
-      "name": "Attach by Process ID",
-      "type": "node",
-      "request": "attach",
-      "processId": "${command:PickProcess}",
-      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }
