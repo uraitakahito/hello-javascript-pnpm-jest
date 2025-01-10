@@ -40,11 +40,43 @@ module.exports = {
 
   overrides: [
     {
-      files: ['test/**'],
+      files: ['test/**', 'src/__tests__/*.test.js'],
       rules: {
         // Magic numbers are frequently used in tests, so disable this rule
         // https://eslint.org/docs/v8.x/rules/no-magic-numbers
         'no-magic-numbers': 'off',
+      },
+    },
+    {
+      /*
+       * IMPORTANT: `all configuration` is not recommended for production use
+       * because it changes with every minor and major version of ESLint. Use it at your own risk.
+       * https://eslint.org/docs/v8.x/use/configure/configuration-files#using-eslintall
+       */
+      extends: ['plugin:jest/all'],
+      files: ['test/**', 'src/__tests__/*.test.js'],
+      // You can omit the eslint-plugin- prefix
+      plugins: ['jest'],
+      rules: {
+        //
+        // It is better to avoid using hooks as much as possible
+        // https://zenn.dev/bun913/articles/0aeef3e7347793
+        // https://eslint.org/docs/v8.x/rules/no-hooks
+        //
+        'jest/no-hooks': 'warn',
+
+        // https://github.com/jest-community/eslint-plugin-jest/blob/v28.10.0/docs/rules/prefer-expect-assertions.md
+        'jest/prefer-expect-assertions': 'off',
+        // https://github.com/jest-community/eslint-plugin-jest/blob/v28.9.0/docs/rules/prefer-importing-jest-globals.md
+        'jest/prefer-importing-jest-globals': 'off',
+        // https://github.com/jest-community/eslint-plugin-jest/blob/v28.9.0/docs/rules/require-hook.md
+        'jest/require-hook': 'off',
+      },
+    },
+    {
+      files: ['jest.config.mjs'],
+      rules: {
+        'max-len': 'off',
       },
     },
   ],
@@ -76,10 +108,19 @@ module.exports = {
     // https://zenn.dev/odiak/articles/9aa48e892e8141
     // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-anonymous-default-export.md
     //
-    'import/no-anonymous-default-export': ['error', { allowCallExpression: false }],
+    'import/no-anonymous-default-export': [
+      'error',
+      { allowCallExpression: false },
+    ],
 
     // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-extraneous-dependencies.md
-    'import/no-extraneous-dependencies': ['error', { devDependencies: ['test/*.js', 'rollup.*.js'], peerDependencies: false }],
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: ['test/*.js', 'src/__tests__/*.test.js', 'rollup.*.js'],
+        peerDependencies: false,
+      },
+    ],
     // https://eslint.org/docs/v8.x/rules/line-comment-position
     'line-comment-position': 'off',
     // https://eslint.org/docs/v8.x/rules/multiline-comment-style
@@ -90,7 +131,10 @@ module.exports = {
     'no-inline-comments': 'off',
     // https://eslint.org/docs/latest/rules/no-param-reassign
     // https://github.com/airbnb/javascript/issues/1217
-    'no-param-reassign': ['error', { props: true, ignorePropertyModificationsForRegex: ['^element'] }],
+    'no-param-reassign': [
+      'error',
+      { props: true, ignorePropertyModificationsForRegex: ['^element'] },
+    ],
     // https://eslint.org/docs/v8.x/rules/no-ternary
     'no-ternary': 'off',
     // https://eslint.org/docs/latest/rules/no-underscore-dangle
